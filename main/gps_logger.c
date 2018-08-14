@@ -1,10 +1,14 @@
-/* SD card and FAT filesystem example.
-   This example code is in the Public Domain (or CC0 licensed, at your option.)
-
-   Unless required by applicable law or agreed to in writing, this
-   software is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-   CONDITIONS OF ANY KIND, either express or implied.
-*/
+/***************************************
+ * gps_logger.c
+ *
+ * Author: Mike Field <hamster@snap.net.nz>
+ *
+ *  This software is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+ *  CONDITIONS OF ANY KIND, either express or implied.
+ *
+ *  It is mostly cobbled togeather from ESP-LDF example code
+ *
+ */
 
 #include <stdio.h>
 #include <string.h>
@@ -47,10 +51,10 @@ static const char *TAG = "gps_logger";
 #define GPS_UART_RTS_PIN (21)
 #define GPS_UART_CTS_PIN (35)
 #define UART_BUF_SIZE    (128)
-#define PATTERN_CHR_NUM  (3)         /*!< Set the number of consecutive and identical characters received by receiver which defines a UART pattern*/
 
+#define FILENAME "gps_log.txt"
 
-         static uint8_t buffers[N_BUFFERS][BUFFER_SIZE];
+static uint8_t buffers[N_BUFFERS][BUFFER_SIZE];
 volatile static uint8_t current_buffer         = 0;
 volatile static uint8_t next_buffer_to_write   = 0;
 volatile static uint8_t seconds_to_write = 0;
@@ -109,9 +113,9 @@ int write_out_any_buffers(void)
     return 0;
   }
 
-  FILE* f = fopen("/sdcard/gpslog.txt", "a");
+  FILE* f = fopen("/sdcard/" FILENAME, "a");
   if(f == NULL) {
-    FILE* f = fopen("/sdcard/gpslog.txt", "w");
+    FILE* f = fopen("/sdcard/" FILENAME, "w");
     if (f == NULL) {
       ESP_LOGE(TAG, "Failed to open file for writing");
       return 0;
